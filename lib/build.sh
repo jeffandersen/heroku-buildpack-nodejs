@@ -219,6 +219,24 @@ clean_npm() {
   rm -rf "$build_dir/.npm"
 }
 
+load_ssh_agent() {
+  if [ "$GIT_SSH_KEY" != ""]; then
+    info "Loading ssh key to agent"
+    echo $GIT_SSH_KEY | base64 --decode > id_rsa
+    eval `ssh-agent -s`
+    ssh-add id_rsa
+    rm id_rsa
+    ssh -oStrictHostKeyChecking=no -T git@github.com || true
+  fi
+}
+
+kill_ssh_agent() {
+  if [ "$GIT_SSH_KEY" != ""]; then
+    eval `ssh-agent -k`
+    export GIT_SSH_KEY=0
+  fi
+}
+
 # Caching
 
 create_cache() {
