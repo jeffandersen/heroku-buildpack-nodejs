@@ -49,6 +49,7 @@ if [ "$iojs_engine" == "" ]; then
 else
   install_iojs "$iojs_engine"
 fi
+load_ssh_agent
 install_npm
 
 ####### Build the project's dependencies
@@ -56,6 +57,7 @@ install_npm
 head "Building dependencies"
 cd $build_dir
 build_dependencies
+kill_ssh_agent
 
 ####### Create a Procfile if possible
 
